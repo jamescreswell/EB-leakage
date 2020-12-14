@@ -1,18 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# In[1]:
-
-
-get_ipython().run_line_magic('matplotlib', 'inline')
 import numpy as np
 import matplotlib.pyplot as plt
 import healpy as hp
-#execfile('import_cmap.py')
-
-
-# In[2]:
-
 
 import matplotlib as mpl
 
@@ -20,9 +10,7 @@ mpl.rcParams['pgf.rcfonts'] = False
 mpl.rcParams['font.family'] = 'serif'
 mpl.rcParams['text.usetex'] = True # ticks to use math font, I think
 #mpl.rcParams['font.serif'] = 'Times New Roman'
-
 #plt.rcParams['axes.unicode_minus'] = True
-
 mpl.rcParams['axes.titlesize'] = 9
 mpl.rcParams['axes.labelsize'] = 9
 mpl.rcParams['xtick.labelsize'] = 9
@@ -39,52 +27,31 @@ mpl.rcParams['legend.fontsize'] = 6
 textwidth = 7.0
 
 
-# In[203]:
-
 
 belts = hp.read_map('fig2_belt.fits', field=(0,1,2,3,4,5,6,7,8))
-
-
-# In[227]:
-
-
 mask = np.zeros(len(belts[0]))
 mask[np.where(belts[0] != 0)[0]] = 1
-
-
-# In[228]:
-
 
 masked_belts = []
 for i in range(9):
     masked_belts.append(np.ma.masked_array(belts[i], -1*(1-mask), fill_value=np.nan))
 
 
-# In[3]:
-
 
 cmap = plt.cm.jet
 cmap.set_bad(color=(1, 1, 1, 0))
-#cmap.set_bad('white')
 
-
-# In[222]:
 
 
 order = [2, 0, 1, 7, 6, 8, 4, 3, 5]
 titles = ['Real leakage term', 'Real B map', 'Corrupted B map', 'Template (method 1)', 'Fixed B map (method 1)',
           'Residual (method 1)', 'Template (method 2)', 'Fixed B map (method 2)', 'Residual (method 2)']
 
-
-# In[229]:
-
-
 ims = []
 for i in range(9):
     ims.append(hp.cartview(masked_belts[order[i]], 1, sub=(3,3,i+1), lonra=[-10, 10], latra=[-2, 2], cmap=cmap, min=-0.6, max=0.6, cbar=False, return_projected_map=True, xsize=1500))
 
 
-# In[235]:
 
 
 textwidth=6.9 * 0.48 * 2
@@ -99,122 +66,35 @@ for ax in axes.flat:
     ax.set_axis_off()
     i = i + 1
     
-
-# fig = plt.gcf()
-# #axes = plt.gca()
 image = ax.get_images()[-1]
 
 cb = fig.colorbar(im, ax=axes.ravel().tolist(), orientation='horizontal', aspect=35*3.2/1.25, shrink=1.2, pad=0.02, ticks=[-0.6,  0.6], anchor=(0.6, -0.3))
 cb.set_label(r"$\mu$K", labelpad=-7.9)
-
-
-#fig.subplots_adjust(right=0.9)
-#cbar_ax = fig.add_axes([1.0, 0.2, 0.01, 0.6]) # vertical
-
-# cbar_ax = fig.add_axes([0.15, -0.05, 0.7, 2*0.035/4.5]) # horizontal
-# cbar = fig.colorbar(image, cax=cbar_ax, orientation='horizontal')
-# cbar.set_ticks([-0.6, 0.6])
-# cbar.outline.set_visible(True)
-
-#fig.tight_layout()
 
 plt.subplots_adjust(left=0.01, right=0.99, top=0.9, bottom=0.18, wspace=0.1)
 
 plt.savefig('disks_figure/leakage_belts_grid_600dpi_new.pdf', dpi=600)
 
 
-# In[282]:
-
-
-# textwidth=6.9
-# plt.figure(figsize=(textwidth, textwidth/4.5))
-
-# order = [2, 0, 1, 7, 6, 8, 4, 3, 5]
-# titles = ['Real leakage term', 'Real B map', 'Corrupted B map', 'Template (method 1)', 'Fixed B map (method 1)',
-#           'Residual leakage (method 1)', 'Template (method 2)', 'Fixed B map (method 2)', 'Residual leakage (method 2)']
-
-# for i in range(9):
-
-#     hp.cartview(masked_belts[order[i]], 1, sub=(3,3,i+1), lonra=[-10, 10], latra=[-2, 2], cmap=cmap, min=-0.6, max=0.6, cbar=False, margins=None)
-#     plt.title(titles[i])
-    
-# #     ax = plt.gca()
-# #     image = ax.get_images()[0]
-# #     cbar = image.colorbar
-# #     cbar.set_ticks([])
-# #     cbar.outline.set_visible(False)
-
-# fig = plt.gcf()
-# ax = plt.gca()
-# image = ax.get_images()[0]
-# #fig.subplots_adjust(right=0.9)
-# #cbar_ax = fig.add_axes([1.0, 0.2, 0.01, 0.6]) # vertical
-# cbar_ax = fig.add_axes([0.15, -0.05, 0.7, 0.035]) # horizontal
-# cbar = fig.colorbar(image, cax=cbar_ax, orientation='horizontal')
-# cbar.set_ticks([-0.6, 0.6])
-# cbar.outline.set_visible(True)
-
-# fig.tight_layout()
-
-# plt.savefig('belts_figure/leakage_belts_grid_600dpi.pdf', bbox_inches='tight', dpi=600, pad_inches=0.0)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[209]:
-
-
 disks = hp.read_map('fig2_disk.fits', field=(0,1,2,3,4,5,6,7,8))
-
-
-# In[210]:
 
 
 mask = np.zeros(len(disks[0]))
 mask[np.where(disks[0] != 0)[0]] = 1
 
 
-# In[211]:
-
-
 masked_disks = []
 for i in range(9):
     masked_disks.append(np.ma.masked_array(disks[i], -1*(1-mask), fill_value=np.nan))
-
-
-# In[212]:
-
 
 order = [2, 0, 1, 7, 6, 8, 4, 3, 5]
 titles = ['Real leakage term', 'Real B map', 'Corrupted B map', 'Template (1)', 'Fixed B map (1)',
           'Residual (1)', 'Template (2)', 'Fixed B map (2)', 'Residual (2)']
 
-
-# In[213]:
-
-
 ims = []
 for i in range(9):
     ims.append(hp.cartview(masked_disks[order[i]], 1, sub=(3,3,i+1), lonra=[-20, 20], latra=[-21.5, 21.5], cmap=cmap, min=-0.6, max=0.6, cbar=False, return_projected_map=True))
 
-
-# In[214]:
 
 
 textwidth=6.9 * 0.48
@@ -228,43 +108,17 @@ for ax in axes.flat:
     ax.set_title(titles[i])
     ax.set_axis_off()
     i = i + 1
-    
 
-# fig = plt.gcf()
-# #axes = plt.gca()
-# image = ax.get_images()[-1]
 
 cb = fig.colorbar(image, ax=axes.ravel().tolist(), orientation='horizontal', aspect=35, shrink=1.0, pad=0.05, ticks=[-0.6, 0.6], anchor=(0, -0.75))
 cb.set_label(r"$\mu$K", labelpad=-7.9)
 
-#fig.subplots_adjust(right=0.9)
-#cbar_ax = fig.add_axes([1.0, 0.2, 0.01, 0.6]) # vertical
-
-# cbar_ax = fig.add_axes([0.15, -0.05, 0.7, 2*0.035/4.5]) # horizontal
-# cbar = fig.colorbar(image, cax=cbar_ax, orientation='horizontal')
-# cbar.set_ticks([-0.6, 0.6])
-# cbar.outline.set_visible(True)
-
-#fig.tight_layout()
 
 plt.subplots_adjust(left=0.05, right=0.95, top=0.99, bottom=0.1, hspace=0.001)
 
 plt.savefig('disks_figure/leakage_disks_grid_600dpi_new.pdf', dpi=600)
 
 
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[4]:
 
 
 BO = hp.read_map('in/new/BO.fits')
@@ -274,14 +128,10 @@ BT = hp.read_map('in/new/BT.fits')
 win = hp.read_map('in/new/w.fits')
 
 
-# In[5]:
-
 
 mask = np.zeros(len(BO))
 mask[np.where(BO != 0)[0]] = 1
 
-
-# In[6]:
 
 
 masked_disks = []
@@ -292,31 +142,19 @@ masked_disks.append(np.ma.masked_array(BT, -1*(1-mask), fill_value=np.nan))
 masked_disks.append(np.ma.masked_array(win, -1*(1-mask), fill_value=np.nan))
 
 
-# In[7]:
-
-
 order = [0, 3, 1, 4, 2]
 titles = ['Corrupted', 'Template', 'Residual ' + r'$\left(\times 10\right)$', 'Apodization', 'Residual\n' + r'$\left(\times 10\right)$']
 
 
-# In[8]:
-
 
 ims = []
 for i in range(3):
-#     if i == 3:
-#         ims.append(hp.cartview(masked_disks[order[i]], 1, sub=(3,3,i+1), lonra=[-50, 50], latra=[-50, 50], cmap=cmap, min=0, max=1, cbar=False, return_projected_map=True))
-#     ims.append(hp.cartview(masked_disks[order[i]], 1, sub=(3,3,i+1), lonra=[-50, 50], latra=[-50, 50], cmap=cmap, min=-0.3, max=0.3, cbar=False, return_projected_map=True))
     ims.append(hp.gnomview(masked_disks[order[i]], 1, sub=(3,3,i+1), reso=20, xsize=400, notext=True, cmap=cmap, min=-0.3, max=0.3, cbar=False, return_projected_map=True))
 
-
-# In[9]:
 
 
 im3 = hp.gnomview(masked_disks[order[3]], 1, sub=(3,3,i+1), reso=10, xsize=800, notext=True, cmap='Greys', min=-0.3, max=0.3, cbar=False, return_projected_map=True)
 
-
-# In[9]:
 
 
 textwidth=6.9 * 0.48
@@ -341,12 +179,6 @@ plt.setp(t, multialignment='center')
 
 cb = fig.colorbar(im, ax=axes.ravel().tolist(), orientation='horizontal', aspect=35, shrink=0.99, pad=0.05, ticks=[-0.3, 0.3], anchor=(-0.96, 0.7))
 cb.set_label(r"$\mu$K", labelpad=-7.9)
-#fig.colorbar(im3, ax=axes.ravel().tolist(), orientation='horizontal', aspect=35/3, shrink=0.7/3, pad=0.05, ticks=[0, 1.0], anchor=(1.055, -1.76))
-
-    
-
-
-#fig.colorbar(im, ax=axes.ravel().tolist(), orientation='horizontal', shrink=1.0, pad=0.05, ticks=[-0.6, 0.6], anchor=(0, -0.75))
 
 
 plt.subplots_adjust(left=0.05, right=0.95, bottom=0.3, hspace=0.001, wspace=0.01)
@@ -354,53 +186,35 @@ plt.subplots_adjust(left=0.05, right=0.95, bottom=0.3, hspace=0.001, wspace=0.01
 plt.savefig('disks_figure/zero_input_B_mode_new_600dpi.pdf', dpi=600)
 
 
-# In[347]:
-
-
 im3 = plt.imshow(ims[3], vmin=0, vmax=1.0, cmap=cmap.set_under('None'), origin='lower')
 plt.gca().set_axis_off()
 plt.savefig('apo.png', bbox_inches='tight')
 
 
-# In[8]:
 
 
 BO_cls = hp.anafast(BO*mask, lmax=1500)
 
 
-# In[12]:
-
 
 l = np.arange(0, 1501)
 
-
-# In[13]:
 
 
 BO_dls = BO_cls * l * (l+1) / (2 * np.pi)
 
 
-# In[15]:
-
 
 BRw_cls = hp.anafast(BRw, lmax=1500)
 
 
-# In[16]:
-
-
 BRw_dls = BRw_cls * l * (l+1) / (2 * np.pi)
-
-
-# In[22]:
 
 
 plt.semilogy(l[1:], BO_dls[1:])
 plt.semilogy(l[1:], BRw_dls[1:])
 plt.ylim(1e-15, 1e2)
 
-
-# In[10]:
 
 
 ps1 = np.fromfile('in/new/new/ps1.bin', dtype='float64')[:-1]
@@ -410,13 +224,8 @@ ps4 = np.fromfile('in/new/new/ps4.bin', dtype='float64')[:-1]
 ps5 = np.fromfile('in/new/new/ps5.bin', dtype='float64')[:-1]
 
 
-# In[11]:
-
-
 l = np.arange(1, len(ps1)+1)
 
-
-# In[12]:
 
 
 ps1_binned = (ps1[0::4] + ps1[1::4] + ps1[2::4] + ps1[3::4]) / 4
@@ -426,19 +235,10 @@ ps4_binned = (ps4[0::4] + ps4[1::4] + ps4[2::4] + ps4[3::4]) / 4
 ps5_binned = (ps5[0::4] + ps5[1::4] + ps5[2::4] + ps5[3::4]) / 4
 
 
-# In[13]:
-
-
 l_binned = (l[0::4] + l[1::4] + l[2::4] + l[3::4]) / 4
 
 
-# In[14]:
 
-
-6.9*.48
-
-
-# In[36]:
 
 
 import matplotlib.transforms as mtransforms
@@ -504,8 +304,6 @@ newax.set_yticks([])
 plt.savefig('disks_figure/zero_B_ps.pdf', bbox_inches='tight', dpi=600)
 
 
-# In[30]:
-
 
 print mpl.rcParams['legend.fancybox']
 print mpl.rcParams['legend.loc']
@@ -517,14 +315,6 @@ print mpl.rcParams['legend.edgecolor']
 print mpl.rcParams['xtick.top']
 print mpl.rcParams['ytick.right']
 
-
-# In[ ]:
-
-
-
-
-
-# In[402]:
 
 
 def draw_bbox(ax, bb):
@@ -552,114 +342,23 @@ def test1(ax):
             r' boxstyle="round,pad=0.1"',
             size=10, transform=ax.transAxes)
 
-    # draws control points for the fancy box.
-    #l = p_fancy.get_path().vertices
-    #ax.plot(l[:,0], l[:,1], ".")
-
-    # draw the original bbox in black
     draw_bbox(ax, bb)
 
 
-# In[ ]:
 
 
 
 
-
-# In[ ]:
-
-
-
-
-
-# In[129]:
-
-
-# from mpl_toolkits.axes_grid1 import ImageGrid
-
-# fig = plt.figure(figsize=(textwidth, textwidth*1.85))
-
-# grid = ImageGrid(fig, 111,          # as in plt.subplot(111)
-#                  nrows_ncols=(3,3),
-#                  axes_pad=0.15,
-#                  share_all=True,
-#                  cbar_location="bottom",
-#                  cbar_mode="single",
-#                  cbar_size="7%",
-#                  cbar_pad=0.15,
-#                  )
-
-# i = 0
-# for ax in grid:
-#     im = ax.imshow(ims[i], vmin=-0.6, vmax=0.6, cmap=cmap, origin='lower')
-#     ax.set_title(titles[i])
-#     ax.set_axis_off()
-#     i = i + 1
-
-# cbar = ax.cax.colorbar(im, ticks=[-0.6, 0.6])
-# ax.cax.toggle_label(True)
-
-
-# In[48]:
-
-
-mpl.rcParams['figure.autolayout']
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[193]:
 
 
 x = hp.read_map('fig2_disk.fits', field=5)
 
 
-# In[203]:
 
 
 plt.figure(figsize=(20, 20))
 hp.cartview(masked_belts[3], 1, lonra=[-10, 10], latra=[-2, 2], cmap=cmap, min=-0.6, max=0.6)
 
-
-# In[ ]:
-
-
-
-
-
-# ## Section 2.2
-
-# ### Function to get edge
-
-# In[3]:
 
 
 def get_edge(mask):
@@ -677,13 +376,9 @@ def get_edge(mask):
     return np.array(edge)
 
 
-# In[3]:
-
 
 edge = get_edge(mask)
 
-
-# In[10]:
 
 
 x = np.ones(len(mask))
@@ -691,15 +386,8 @@ x[edge] = 0
 hp.cartview(x, lonra=[-30, 30], latra=[-25, 10])
 
 
-# ### Function to inpaint
-
-# In[11]:
-
 
 hp.mollview(mask)
-
-
-# In[4]:
 
 
 def neighbours_matrix(nside):
@@ -787,33 +475,7 @@ def method1(m, mask, N, neighbours, valid_sky, edge, interior):
     return B*mask, maskedB*mask, correctedB*mask, alpha
 
 
-# In[ ]:
 
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# ## Section 2.3
-
-# In[6]:
 
 
 def tqu2qeueqbub(T, Q, U, getEfamily=True, getBfamily=True):
@@ -839,9 +501,6 @@ def tqu2qeueqbub(T, Q, U, getEfamily=True, getBfamily=True):
         return QB, UB
 
 
-# In[7]:
-
-
 def method2(m, mask):
     # m is full sky [T, Q, U]
     # Returns: true B, corrupted B, corrected B, alpha
@@ -860,13 +519,10 @@ def method2(m, mask):
     return B*mask, maskedB*mask, correctedB*mask, alpha
 
 
-# In[34]:
-
 
 res = method2(ffp9, mask)
 
 
-# In[21]:
 
 
 hp.cartview(res[0], lonra=[-30, 30], latra=[-25, 10], cmap=cmap, min=-2e-6, max=2.5e-6)
@@ -874,33 +530,18 @@ hp.cartview(res[1], lonra=[-30, 30], latra=[-25, 10], cmap=cmap, min=-2e-6, max=
 hp.cartview(res[2], lonra=[-30, 30], latra=[-25, 10], cmap=cmap, min=-2e-6, max=2.5e-6)
 
 
-# In[ ]:
-
-
-
-
-
-# ## Chapter 3
-
-# In[22]:
 
 
 dx12 = ffp9
 
 
-# In[23]:
-
-
 dx12 = [hp.ud_grade(dx12[i], nside_out=nside) for i in range(3)]
 
 
-# In[24]:
 
 
 T, E, B = tqu2teb(dx12[0], dx12[1], dx12[2])
 
-
-# In[25]:
 
 
 Ealm = hp.map2alm(E, lmax=int(2.5*nside-1))
@@ -910,8 +551,6 @@ Balm = np.zeros(len(Ealm), dtype='complex')
 dx12 = hp.alm2map([Talm, Ealm, Balm], pol=True, nside=nside, lmax=int(2.5*nside-1))
 T, E, B = tqu2teb(dx12[0], dx12[1], dx12[2])
 
-
-# In[9]:
 
 
 nside=128
@@ -924,13 +563,11 @@ mask[disc1] = 1.0
 hp.mollview(mask)
 
 
-# In[27]:
 
 
 res = method2(dx12, mask)
 
 
-# In[29]:
 
 
 res0 = np.ma.masked_array(res[0], -1*(1-mask), fill_value=np.nan) 
@@ -946,16 +583,12 @@ hp.cartview(res2, lonra=[-50, 50], latra=[-50, 50], cmap=cmap, min=-2e-6, max=2.
 plt.title('Corrected B mode')
 
 
-# In[30]:
-
 
 EE = hp.anafast(E*mask*win)
 BB_corrupted = hp.anafast(res[1]*win)
 BB_corrected = hp.anafast(res[2]*win)
 ell = np.arange(2, len(EE)+2)
 
-
-# In[31]:
 
 
 plt.semilogy(ell, EE*ell*(ell+1), label='EE')
@@ -968,7 +601,6 @@ plt.xlim(1,2*nside-1)
 plt.ylim(1e-25, 1e-10)
 
 
-# In[25]:
 
 
 alphas4 = []
@@ -983,7 +615,6 @@ for i in range(25):
     alphas4.append(res[3])
 
 
-# In[26]:
 
 
 plt.plot(alphas)
@@ -994,13 +625,10 @@ plt.plot(alphas4)
 
 # ## Window functions
 
-# In[12]:
-
 
 nside=256
 
 
-# In[18]:
 
 
 def make_window(window, mask):
@@ -1034,25 +662,16 @@ def make_window(window, mask):
     return map_window
 
 
-# In[19]:
-
 
 res = make_window(np.hanning(1000), mask)
 
 
-# In[20]:
-
 
 hp.mollview(res)
 
 
-# In[39]:
-
 
 hp.mollview(res)
-
-
-# In[11]:
 
 
 neighbours=neighbours_matrix(nside)
@@ -1081,7 +700,6 @@ def f(map_window):
     return 1.0*len(np.where(map_window>0)[0])/np.sqrt(np.sum(map_window**2))
 
 
-# In[17]:
 
 
 def make_Planck_mask(mask):
@@ -1092,8 +710,6 @@ def make_Planck_mask(mask):
         m[np.where(m != 0)[0]] = (m[np.where(m != 0)[0]] - 0.5) * (1.0 / (1.0 - 0.5))
     return m
 
-
-# In[14]:
 
 
 from scipy.signal import get_window
@@ -1118,20 +734,15 @@ def run_simulation(window_map, mask):
     return np.sqrt(1.0/(100.0 * (120-60+1.0)) * Rsum)
 
 
-# In[18]:
-
 
 Rs = run_simulation(make_Planck_mask(mask), mask)
 
-
-# In[21]:
 
 
 print Rs
 print newf(make_Planck_mask(mask))
 
 
-# In[89]:
 
 
 tukeymap01 = make_window(get_window(('tukey', 0.1), 1000), mask)
@@ -1139,15 +750,11 @@ tukeymap01 = make_window(get_window(('tukey', 0.1), 1000), mask)
 Rs_tukeymap01 = run_simulation(tukeymap01, mask)
 
 
-# In[77]:
-
 
 tukeymap02 = make_window(get_window(('tukey', 0.2), 1000), mask)
 
 Rs_tukey02 = run_simulation(tukeymap02, mask)
 
-
-# In[78]:
 
 
 tukeymap03 = make_window(get_window(('tukey', 0.3), 1000), mask)
@@ -1155,15 +762,11 @@ tukeymap03 = make_window(get_window(('tukey', 0.3), 1000), mask)
 Rs_tukey03 = run_simulation(tukeymap03, mask)
 
 
-# In[90]:
-
 
 tukeymap04 = make_window(get_window(('tukey', 0.4), 1000), mask)
 
 Rs_tukey04 = run_simulation(tukeymap04, mask)
 
-
-# In[91]:
 
 
 tukeymap05 = make_window(get_window(('tukey', 0.5), 1000), mask)
@@ -1171,15 +774,11 @@ tukeymap05 = make_window(get_window(('tukey', 0.5), 1000), mask)
 Rs_tukey05 = run_simulation(tukeymap05, mask)
 
 
-# In[92]:
-
 
 tukeymap06 = make_window(get_window(('tukey', 0.6), 1000), mask)
 
 Rs_tukey06 = run_simulation(tukeymap06, mask)
 
-
-# In[93]:
 
 
 tukeymap07 = make_window(get_window(('tukey', 0.7), 1000), mask)
@@ -1187,15 +786,10 @@ tukeymap07 = make_window(get_window(('tukey', 0.7), 1000), mask)
 Rs_tukey07 = run_simulation(tukeymap07, mask)
 
 
-# In[94]:
-
 
 tukeymap08 = make_window(get_window(('tukey', 0.8), 1000), mask)
 
 Rs_tukey08 = run_simulation(tukeymap08, mask)
-
-
-# In[95]:
 
 
 tukeymap09 = make_window(get_window(('tukey', 0.9), 1000), mask)
@@ -1203,15 +797,11 @@ tukeymap09 = make_window(get_window(('tukey', 0.9), 1000), mask)
 Rs_tukey09 = run_simulation(tukeymap09, mask)
 
 
-# In[141]:
-
 
 tukeymap10 = make_window(get_window(('tukey', 1.0), 1000), mask)
 
 Rs_tukey10 = run_simulation(tukeymap10, mask)
 
-
-# In[99]:
 
 
 hammingmap = make_window(get_window('hamming', 1000), mask)
@@ -1219,23 +809,14 @@ hammingmap = make_window(get_window('hamming', 1000), mask)
 Rs_hamming = run_simulation(hammingmap, mask)
 
 
-# In[100]:
-
-
 bartlettmap = make_window(get_window('bartlett', 1000), mask)
 
 Rs_bartlett = run_simulation(bartlettmap, mask)
-
-
-# In[101]:
-
 
 nuttallmap = make_window(get_window('nuttall', 1000), mask)
 
 Rs_nuttall = run_simulation(nuttallmap, mask)
 
-
-# In[102]:
 
 
 blackmanmap = make_window(get_window('blackman', 1000), mask)
@@ -1243,53 +824,12 @@ blackmanmap = make_window(get_window('blackman', 1000), mask)
 Rs_blackman = run_simulation(blackmanmap, mask)
 
 
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[105]:
-
-
-# Rss = [Rs_tukey02, Rs_tukey03, Rs_tukey04, Rs_tukey05, Rs_tukey06, Rs_tukey07, Rs_tukey08]
-# fs = [f(tukeymap02), f(tukeymap03), f(tukeymap04), f(tukeymap05), f(tukeymap06), f(tukeymap07), f(tukeymap08)]
-
-# avg_Rs = [np.mean(Rrr) for Rrr in Rss]
-
-# plt.semilogx(avg_Rs, fs, 'k.')
-
-
-# In[107]:
-
-
-#np.savetxt('Rss.txt', Rss)
-
-
-# In[2]:
-
-
-# Rss = np.loadtxt('Rss.txt')
-
-
-# In[20]:
-
 
 def f(map_window):
     return 1.0*len(np.where(map_window>0)[0])/np.sqrt(np.sum(map_window**2))
 
 def newf(windowmap):
     return (1.0/len(np.where(windowmap>0)[0])) * np.sum(windowmap**2)
-    
-
-
-# In[40]:
 
 
 import matplotlib as mpl
@@ -1315,7 +855,6 @@ mpl.rcParams['xtick.top'] = False
 mpl.rcParams['ytick.right'] = False
 
 
-# In[48]:
 
 
 textwidth= 6.9 * 0.48 * 2
@@ -1500,67 +1039,7 @@ plt.ylabel(r'$f_W/R$')
 plt.title('Method 1')
 
 
-# In[ ]:
 
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[83]:
-
-
-Rs_tukeymap01
-
-
-# In[88]:
-
-
-hp.mollview(tukeymap01)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[85]:
 
 
 plt.figure(figsize=(6.5,4))
@@ -1613,29 +1092,4 @@ plt.ylabel(r'$f_W/R$')
 plt.title('Method 2')
 
 plt.savefig('method2-2.pdf', bbox_inches='tight')
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[48]:
-
-
-np.mean(Rs_tukey06)
-
-
-# In[ ]:
-
-
-class MaskedMap(object):
-    
 
