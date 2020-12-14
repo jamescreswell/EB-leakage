@@ -13,4 +13,4 @@ It can be combined with the MASTER method to reconstruct the full-sky B-mode spe
 
 ## Code 
 
-`leakage.py` contains the code, written in Python 3 using `numpy` and `healpy`.
+`leakage.py` contains some scripts, written in Python 3 using `numpy` and `healpy` (IN PROGRESS)
